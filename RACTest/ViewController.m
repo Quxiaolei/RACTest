@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-static NSString *cellIdentifier = @"cell";
+static NSString * const cellIdentifier = @"cell";
 
 @interface ViewController ()
 <UITableViewDelegate,
@@ -23,7 +23,7 @@ UITableViewDataSource>
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    _cellNameArray = @[@"concat",@"zipWith",@"then"];
+    _cellNameArray = @[@"concat",@"zipWith",@"then",@"merge",@"combineLatest",@"reduce"];
     
     [self createView];
 }
@@ -55,6 +55,10 @@ UITableViewDataSource>
         case 0: [self concatSignal]; break;
         case 1: [self zipWithSignal]; break;
         case 2: [self thenSignal]; break;
+        case 3: [self mergeSignal]; break;
+        case 4: [self combineLatestSignal]; break;
+        case 5: [self reduceSignal]; break;
+
         default:break;
     }
     
@@ -138,8 +142,77 @@ UITableViewDataSource>
 // 底层实现：1、先过滤掉之前的信号发出的值。2.使用concat连接then返回的信号
 - (void)thenSignal
 {
+    RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        [subscriber sendNext:@1];
+        [subscriber sendCompleted];
+        return  nil;
+    }];
+    
+    RACSignal *signalB = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        [subscriber sendNext:@2];
+        [subscriber sendCompleted];
+        return nil;
+    }];
+    RACSignal *signalThen = [signalA then:^RACSignal *{
+        return signalB;
+    }];
+    
+    [signalThen subscribeNext:^(id x) {
+        MSLog(@"李磊----%@",x);
+    } error:^(NSError *error) {
+        MSLog(@"李磊----%@",error.localizedDescription);
+    } completed:^{
+        MSLog(@"李磊----完成");
+    }];
+}
+/*!
+ *  @author madis, 16-05-12 12:05:39
+ *
+ *  merge:把多个信号合并为一个信号，任何一个信号有新值的时候就会调用
+ */
+// 底层实现：
+// 1.合并信号被订阅的时候，就会遍历所有信号，并且发出这些信号。
+// 2.每发出一个信号，这个信号就会被订阅
+// 3.也就是合并信号一被订阅，就会订阅里面所有的信号。
+// 4.只要有一个信号被发出就会被监听。
+- (void)mergeSignal
+{
+    RACSignal *signalA = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        [subscriber sendNext:@1];
+        MSLog(@"李磊----signalA");
+        [subscriber sendCompleted];
+        return nil;
+    }];
+    RACSignal *signalB = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        [subscriber sendNext:@2];
+        MSLog(@"李磊----signalB");
+        [subscriber sendCompleted];
+        return nil;
+    }];
+    [[signalA merge:signalB] subscribeNext:^(id x) {
+        MSLog(@"李磊----%@",x);
+    } error:^(NSError *error) {
+        MSLog(@"李磊----%@",error.localizedDescription);
+    } completed:^{
+        MSLog(@"李磊----完成");
+    }];
+}
+
+- (void)combineLatestSignal
+{
     
 }
+
+- (void)reduceSignal
+{
+    
+}
+- (void)combineLatestReduceSignal
+{
+//    RACSignal *reduceSignal = [RACSignal combineLatest:@[signalA,signalB] reduce:^id(NSNumber *num1 ,NSNumber *num2){
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
