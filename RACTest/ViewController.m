@@ -15,6 +15,8 @@ static NSString * const cellIdentifier = @"cell";
 UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSArray<NSString *> *cellNameArray;
+
+@property (nonatomic,strong) NSNumber *input;
 @end
 
 @implementation ViewController
@@ -23,7 +25,8 @@ UITableViewDataSource>
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    _cellNameArray = @[@"concat",@"zipWith",@"then",@"merge",@"combineLatest",@"reduce",@"filter",@"ignoreSignal"];
+    _input = @111111111;
+    _cellNameArray = @[@"concat",@"zipWith",@"then",@"merge",@"combineLatest",@"reduce",@"filter",@"ignoreSignal",@"distinctUntilChanged"];
     
     [self createView];
 }
@@ -60,6 +63,7 @@ UITableViewDataSource>
         case 5: [self reduceSignal]; break;
         case 6: [self filterSignal]; break;
         case 7: [self ignoreSignal]; break;
+        case 8: [self distinctUntilChangedSignal]; break;
 
         default:break;
     }
@@ -332,6 +336,28 @@ UITableViewDataSource>
 //        MSLog(@"李磊---%@",x);
 //    }];
 }
+/*!
+ *  @author madis, 16-05-17 10:05:08
+ *
+ *  当上一次的值和当前的值有明显的变化就会发出信号，否则会被忽略掉。
+ */
+// 过滤，当上一次和当前的值不一样，就会发出内容。
+// 在开发中，刷新UI经常使用，只有两次数据不一样才需要刷新
+- (void)distinctUntilChangedSignal
+{
+    UITextField *textField = [[UITextField alloc]init];
+    [[textField.rac_textSignal distinctUntilChanged] subscribeNext:^(id x) {
+        MSLog(@"李磊------%@",x);
+    }];
+
+    //???: 难道不好使?
+    _input = @111111111;
+    [[RACObserve(self, input) distinctUntilChanged] subscribeNext:^(id x) {
+        MSLog(@"李磊------%@",x);
+    }];
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
