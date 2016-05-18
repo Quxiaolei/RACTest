@@ -7,8 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "TableViewController.h"
-#import "LoginViewController.h"
 static NSString * const cellIdentifier = @"cell";
 
 @interface ViewController ()
@@ -27,7 +25,15 @@ UITableViewDataSource>
     // Do any additional setup after loading the view, typically from a nib.
     
     _input = @111111111;
-    _cellNameArray = @[@"concat",@"zipWith",@"then",@"merge",@"combineLatest",@"reduce",@"filter",@"ignoreSignal",@"distinctUntilChanged"];
+    _cellNameArray = @[@"concat:顺序拼接signal",
+                       @"zipWith:把两个signal的内容合并成一个signal",
+                       @"then:第一个signal完成，连接then返回的信号,覆盖第一个sendNext",
+                       @"merge:多个signal合并为一个signal，任何一个signal有新值的时候就会调用",
+                       @"combineLatest:多个signal合并起来，并且拿到各个signal的最新的值(必须有sendNext)",
+                       @"reduce:多个signal合为元组，元组中任意一个值发生变化就会sendNext",
+                       @"filter:过滤signal，使用它可以获取满足条件的signal",
+                       @"ignoreSignal:忽略signal的某些值",
+                       @"distinctUntilChanged:本次的值有明显的变化就会发出信号，否则会被忽略掉"];
     
     [self createView];
 }
@@ -49,7 +55,11 @@ UITableViewDataSource>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+    }
     cell.textLabel.text = _cellNameArray[indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:13.0f];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -115,7 +125,7 @@ UITableViewDataSource>
 /*!
  *  @author madis, 16-05-11 11:05:39
  *
- *  zipWith(类似NSArray):把两个信号压缩成一个信号，只有当两个信号同时发出信号内容时，并且把两个信号的内容合并成一个元组，才会触发压缩流的next事件。
+ *  zipWith(类似NSArray):把两个信号压缩成一个信号，只有当两个信号同时发出信号内容时，并且把两个信号的内容合并成一个信号，才会触发压缩流的next事件。
  */
 // 底层实现:
 // 1.定义压缩信号，内部就会自动订阅signalA，signalB

@@ -13,7 +13,6 @@
 		259A21FB1CE2CDEB00288C7A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 259A21F91CE2CDEB00288C7A /* Main.storyboard */; };
 		259A21FD1CE2CDEB00288C7A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A21FC1CE2CDEB00288C7A /* Assets.xcassets */; };
 		259A22001CE2CDEB00288C7A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 259A21FE1CE2CDEB00288C7A /* LaunchScreen.storyboard */; };
-		25F6512D1CE9D5DA00A13387 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F6512C1CE9D5DA00A13387 /* TableViewController.m */; };
 		25F97A211CEAF49F00142F56 /* Pods_RACTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CC62E53153CC48F0007EA3 /* Pods_RACTest.framework */; };
 		25F97A241CEAF49F00142F56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A21FC1CE2CDEB00288C7A /* Assets.xcassets */; };
 		25F97A251CEAF49F00142F56 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 259A21F91CE2CDEB00288C7A /* Main.storyboard */; };
@@ -22,6 +21,7 @@
 		25F97A381CEAFC4600142F56 /* main_Login.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F97A371CEAFC4600142F56 /* main_Login.m */; };
 		25F97A3E1CEAFF7000142F56 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F97A3C1CEAFF7000142F56 /* LoginViewController.m */; };
 		25F97A3F1CEAFF7000142F56 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F97A3D1CEAFF7000142F56 /* LoginViewController.xib */; };
+		25F97A431CEB1FB000142F56 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F97A421CEB1FB000142F56 /* TableViewController.m */; };
 		43D7D4FF6E899D6922E6151B /* Pods_RACTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CC62E53153CC48F0007EA3 /* Pods_RACTest.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,8 +38,6 @@
 		259A21FF1CE2CDEB00288C7A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		259A22011CE2CDEB00288C7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		259A22071CE2D2D500288C7A /* RACTest.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RACTest.pch; sourceTree = "<group>"; };
-		25F6512B1CE9D5DA00A13387 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
-		25F6512C1CE9D5DA00A13387 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 		25F97A2B1CEAF49F00142F56 /* RACTest_Login.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RACTest_Login.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25F97A2C1CEAF49F00142F56 /* RACTest copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RACTest copy-Info.plist"; path = "/Users/madis/Documents/RACTest/RACTest copy-Info.plist"; sourceTree = "<absolute>"; };
 		25F97A311CEAFA9600142F56 /* AppDelegate_Login.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate_Login.h; path = LoginTest/AppDelegate_Login.h; sourceTree = "<group>"; };
@@ -49,6 +47,8 @@
 		25F97A3B1CEAFF7000142F56 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = LoginTest/LoginViewController.h; sourceTree = "<group>"; };
 		25F97A3C1CEAFF7000142F56 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = LoginTest/LoginViewController.m; sourceTree = "<group>"; };
 		25F97A3D1CEAFF7000142F56 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginViewController.xib; path = LoginTest/LoginViewController.xib; sourceTree = "<group>"; };
+		25F97A411CEB1FB000142F56 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TableViewController.h; path = LoginTest/TableViewController.h; sourceTree = "<group>"; };
+		25F97A421CEB1FB000142F56 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TableViewController.m; path = LoginTest/TableViewController.m; sourceTree = "<group>"; };
 		AA1DC151AA33C01051FDC0F2 /* Pods-RACTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-RACTest/Pods-RACTest.release.xcconfig"; sourceTree = "<group>"; };
 		E442DAE2A3C65726D7F4D73C /* Pods-RACTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RACTest/Pods-RACTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,8 +101,6 @@
 				259A21F61CE2CDEB00288C7A /* ViewController.h */,
 				259A21F71CE2CDEB00288C7A /* ViewController.m */,
 				25F97A3A1CEAFF3000142F56 /* LoginTest */,
-				25F6512B1CE9D5DA00A13387 /* TableViewController.h */,
-				25F6512C1CE9D5DA00A13387 /* TableViewController.m */,
 				259A21F91CE2CDEB00288C7A /* Main.storyboard */,
 				259A21FC1CE2CDEB00288C7A /* Assets.xcassets */,
 				259A21FE1CE2CDEB00288C7A /* LaunchScreen.storyboard */,
@@ -131,6 +129,8 @@
 				25F97A3B1CEAFF7000142F56 /* LoginViewController.h */,
 				25F97A3C1CEAFF7000142F56 /* LoginViewController.m */,
 				25F97A3D1CEAFF7000142F56 /* LoginViewController.xib */,
+				25F97A411CEB1FB000142F56 /* TableViewController.h */,
+				25F97A421CEB1FB000142F56 /* TableViewController.m */,
 			);
 			name = LoginTest;
 			sourceTree = "<group>";
@@ -352,7 +352,6 @@
 				259A21F81CE2CDEB00288C7A /* ViewController.m in Sources */,
 				259A21F51CE2CDEB00288C7A /* AppDelegate.m in Sources */,
 				259A21F21CE2CDEB00288C7A /* main.m in Sources */,
-				25F6512D1CE9D5DA00A13387 /* TableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +362,7 @@
 				25F97A381CEAFC4600142F56 /* main_Login.m in Sources */,
 				25F97A331CEAFA9600142F56 /* AppDelegate_Login.m in Sources */,
 				25F97A3E1CEAFF7000142F56 /* LoginViewController.m in Sources */,
+				25F97A431CEB1FB000142F56 /* TableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
