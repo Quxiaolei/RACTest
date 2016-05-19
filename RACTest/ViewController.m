@@ -58,8 +58,14 @@ UITableViewDataSource>
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
     }
-    cell.textLabel.text = _cellNameArray[indexPath.row];
+    
     cell.textLabel.font = [UIFont systemFontOfSize:13.0f];
+    NSArray *arry = [_cellNameArray[indexPath.row] componentsSeparatedByString:@":"];
+    NSString *firstStr = arry[0];
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:_cellNameArray[indexPath.row]];
+    [attributeString addAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],NSFontAttributeName:[UIFont boldSystemFontOfSize:13.0f]} range:NSMakeRange(0, firstStr.length)];
+    cell.textLabel.attributedText = attributeString;
+//    cell.textLabel.text = _cellNameArray[indexPath.row];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

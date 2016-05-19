@@ -104,21 +104,38 @@
 /*-------------------------------------_loginBtn-------->>>>target-action-------------------------------*/
     //当_accountTextField和_passwordTextField正在校验时，登录按钮不可点击,防止用户多次执行登录操作
     //!!!:  target-action
-    [[[[_loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] doNext:^(id x) {
+//    [[[[_loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] doNext:^(id x) {
+//        _loginBtn.enabled = NO;
+//    }]
+//      //在主线程中执行
+//      deliverOn:[RACScheduler mainThreadScheduler]]
+//     subscribeNext:^(id x) {
+//        @strongify(self);
+//        MSLog(@"李磊---login");
+//        TableViewController *vc = [[TableViewController alloc]init];
+//        [self.navigationController pushViewController:vc animated:YES];
+//        //模拟登陆成功
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            _loginBtn.enabled = YES;
+//        });
+//    }];
+//------------------
+    [[[[[_loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] doNext:^(id x) {
         _loginBtn.enabled = NO;
-    }]
+        //防止连点
+    }] throttle:0.5f]
       //在主线程中执行
       deliverOn:[RACScheduler mainThreadScheduler]]
      subscribeNext:^(id x) {
-        @strongify(self);
-        MSLog(@"李磊---login");
-        TableViewController *vc = [[TableViewController alloc]init];
-        [self.navigationController pushViewController:vc animated:YES];
-        //模拟登陆成功
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            _loginBtn.enabled = YES;
-        });
-    }];
+         @strongify(self);
+         MSLog(@"李磊---login---%@",x);
+         TableViewController *vc = [[TableViewController alloc]init];
+         [self.navigationController pushViewController:vc animated:YES];
+         //模拟登陆成功
+         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+             _loginBtn.enabled = YES;
+         });
+     }];
     
 /*-------------------------------------通知----------------------------------------*/
     //!!!:  通知
@@ -129,11 +146,10 @@
      }];
     
 /*-------------------------------------分线程加载图片----------------------------------------*/
-    [[self loadImageOnBackGround] subscribeNext:^(NSData *x) {
-//        (lldb) po [RACScheduler currentScheduler]
-//        <RACTargetQueueScheduler: 0x7fb5d1c2a820> com.ReactiveCocoa.RACScheduler.backgroundScheduler
-        @strongify(self);
-        self.imageView.image = [UIImage imageWithData:x];
+    //主线程执行
+    [[[self loadImageOnBackGround] deliverOn:[RACScheduler mainThreadScheduler]] subscribeNext:^(UIImage *x) {
+//        @strongify(self);
+        self.imageView.image = x;
         MSLog(@"李磊---图片更换.......");
     } error:^(NSError *error) {
         MSLog(@"李磊---图片更换---%@",error.localizedDescription);
@@ -141,6 +157,30 @@
         MSLog(@"李磊---图片更换---完成");
     }];
     
+//    [[[[[[[self requestAccessToTwitterSignal]
+//          then:^RACSignal *{
+//              @strongify(self)
+//              return self.searchText.rac_textSignal;
+//          }]
+//         filter:^BOOL(NSString *text) {
+//             @strongify(self)
+//             return [self isValidSearchText:text];
+//         }]
+//        throttle:0.5]
+//       flattenMap:^RACStream *(NSString *text) {
+//           @strongify(self)
+//           return [self signalForSearchWithText:text];
+//       }]
+//      deliverOn:[RACScheduler mainThreadScheduler]]
+//     subscribeNext:^(NSDictionary *jsonSearchResult) {
+//         NSArray *statuses = jsonSearchResult[@"statuses"];
+//         NSArray *tweets = [statuses linq_select:^id(id tweet) {
+//             return [RWTweet tweetWithStatus:tweet];
+//         }];
+//         [self.resultsViewController displayTweets:tweets];
+//     } error:^(NSError *error) {
+//         NSLog(@"An error occurred: %@", error);
+//     }];
 }
 /*!
  *  @author madis, 16-05-18 18:05:47
@@ -151,20 +191,18 @@
  */
 - (RACSignal *)loadImageOnBackGround
 {
-//    (lldb) po [RACScheduler mainThreadScheduler]
-//    <RACTargetQueueScheduler: 0x7fb5d1c0f210> com.ReactiveCocoa.RACScheduler.mainThreadScheduler
-//    (lldb) po [RACScheduler currentScheduler]
-//    <RACTargetQueueScheduler: 0x7fb5d1c2a820> com.ReactiveCocoa.RACScheduler.backgroundScheduler
     RACScheduler *scheduler = [RACScheduler schedulerWithPriority:RACSchedulerPriorityBackground];
     NSError *error = [NSError errorWithDomain:@"loadImageOnBackGround" code:404 userInfo:nil];
     return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1671576656,1573074395&fm=116&gp=0.jpg"]];
-        if (!imageData) {
+        UIImage *image = [UIImage imageWithData:imageData];
+        if (!image) {
             [subscriber sendError:error];
         }
-        [subscriber sendNext:imageData];
+        [subscriber sendNext:image];
         [subscriber sendCompleted];
         return nil;
+        //后台执行
     }] subscribeOn:scheduler];
 }
 - (IBAction)regBtnClick:(id)sender {
