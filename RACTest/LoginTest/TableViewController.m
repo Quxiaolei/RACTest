@@ -47,16 +47,24 @@
 //    head ：指的是序列中的第一个对象，如果序列为空，则为 nil ；
 //    tail ：指的是序列中除第一个对象外的其它所有对象，同样的，如果序列为空，则为 nil。(tail又是一个RACSequence)
 
-    //类似于For-In遍历,直到找到第一个满足条件的
-    RACSequence *results = [[_cellNameArray.rac_sequence filter:^ BOOL (NSString *str) {
-        MSLog(@"李磊---fiter-%@",str);
-        return str.length >= 4;
-    }] map:^(NSString *str) {
-        MSLog(@"李磊---map-%@",str);
-        return str;
+    //类似于For-In遍历,直到找到第一个满足条件的数据
+//    RACSequence *results = [[_cellNameArray.rac_sequence filter:^ BOOL (NSString *str) {
+//        MSLog(@"李磊---fiter-%@",str);
+//        return str.length >= 4;
+//    }] map:^(NSString *str) {
+//        MSLog(@"李磊---map-%@",str);
+//        return str;
+//    }];
+//    NSString *str = results.head;
+//    MSLog(@"李磊---result-%@",str);
+    
+    //For-In遍历,查询所有满足条件的数据
+    [[_cellNameArray.rac_sequence filter:^BOOL(NSString *value) {
+        return value.length >3;
+    }] all:^BOOL(NSString *value) {
+        MSLog(@"李磊----%@",value);
+        return YES;
     }];
-    NSString *str = results.head;
-    MSLog(@"李磊---result-%@",str);
 }
 
 #pragma mark - Table view data source

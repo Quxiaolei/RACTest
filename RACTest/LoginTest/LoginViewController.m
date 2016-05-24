@@ -8,14 +8,22 @@
 
 #import "LoginViewController.h"
 #import "TableViewController.h"
+typedef NS_ENUM(NSInteger, LoginStatus) {
+    LoginStatusUnLogin   = 0,
+    LoginStatusLoggingin = 1,
+    LoginStatusLogedin   = 2,
+    LoginStatusLogedfail = 3
+};
 
 @interface LoginViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextField *accountTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (weak, nonatomic) IBOutlet UIButton *regBtn;
-@property (weak, nonatomic) IBOutlet UIButton *loginBtn;
+@property (weak, nonatomic) IBOutlet UIButton    *regBtn;
+@property (weak, nonatomic) IBOutlet UIButton    *loginBtn;
+
+@property (nonatomic, assign) LoginStatus loginStatus;
 
 @end
 
@@ -26,6 +34,7 @@
     // Do any additional setup after loading the view from its nib.
     
     self.navigationItem.title = @"首页";
+    _loginStatus = LoginStatusUnLogin;
 /*----------------------------------------------------------------------------*/
     //一直订阅信号,每次都做判断,不必要进行
 //    [_accountTextField.rac_textSignal subscribeNext:^(id x) {
@@ -57,9 +66,14 @@
 //    }];
 
 /*-------------NSString--------------------map--------------------NSNumber-------------------*/
-    RACSignal *accountSignal = [_accountTextField.rac_textSignal map:^NSNumber *(NSString *value) {
+    RACSignal *accountSignal = [[_accountTextField.rac_textSignal map:^NSNumber *(NSString *value) {
         //判断账号有效性等
         return @(value.length >3);
+        //skip:跳过前某几个signal输入
+    }] skip:1];
+    
+    [accountSignal subscribeNext:^(id x) {
+        MSLog(@"李磊----subscribe----%@",x);
     }];
     
     //    [[signal map:^id(id value) {
@@ -74,24 +88,29 @@
     }];
     
 /*---------------------combineLatest------------------------reduce-------------------------------*/
-    RACSignal *passwordSignal = [_passwordTextField.rac_textSignal map:^NSNumber *(NSString *value) {
-        return @(value.length >3);
+//    RACSignal *passwordSignal = [_passwordTextField.rac_textSignal map:^NSNumber *(NSString *value) {
+//        return @(value.length >3);
+//    }];
+//    RACSignal *combineSignal = [[RACSignal combineLatest:@[accountSignal,passwordSignal] reduce:^id(NSNumber *signalA,NSNumber *signalB){
+//        return @([signalA boolValue] &&[signalB boolValue]);
+//    }] distinctUntilChanged];
+//    //distinctUntilChanged,当前状态一直不可用时,不会subscribeNext操作
+//    @weakify(self);
+//    [combineSignal subscribeNext:^(id x) {
+//        @strongify(self);
+//        self.loginBtn.backgroundColor = [x boolValue]? [UIColor redColor]:[UIColor lightGrayColor];
+//        self.loginBtn.enabled = [x boolValue];
+//    }];
+/*---------------------combineLatest------------------------reduce-------------------------------*/
+    //!!!:  KVO,RACObserve,keypath
+    RAC(_loginBtn,enabled) = [RACSignal combineLatest:@[_accountTextField.rac_textSignal,_passwordTextField.rac_textSignal,RACObserve(self, loginStatus)] reduce:^id(NSString *account,NSString *password,LoginStatus status){
+        //账号密码满足某种条件,且当前是未登录状态
+        return @(account.length >0 &&password.length>0 &&(status != LoginStatusLoggingin));
     }];
-    RACSignal *combineSignal = [[RACSignal combineLatest:@[accountSignal,passwordSignal] reduce:^id(NSNumber *signalA,NSNumber *signalB){
-        return @([signalA boolValue] &&[signalB boolValue]);
-    }] distinctUntilChanged];
-    //distinctUntilChanged,当前状态一直不可用时,不会subscribeNext操作
-    @weakify(self);
-    [combineSignal subscribeNext:^(id x) {
-        @strongify(self);
-        self.loginBtn.backgroundColor = [x boolValue]? [UIColor redColor]:[UIColor lightGrayColor];
-        self.loginBtn.enabled = [x boolValue];
-    }];
-    
 /*----------------------------merge-------------任何一个signal改变都会subscribe----------------------*/
-    [[accountSignal merge:passwordSignal] subscribeNext:^(id x) {
-        MSLog(@"李磊--merge--%@",x);
-    }];
+//    [[accountSignal merge:passwordSignal] subscribeNext:^(id x) {
+//        MSLog(@"李磊--merge--%@",x);
+//    }];
     
 /*-------------------------------------_loginBtn---------------------------------------*/
 //    [[_loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
@@ -127,7 +146,7 @@
       //在主线程中执行
       deliverOn:[RACScheduler mainThreadScheduler]]
      subscribeNext:^(id x) {
-         @strongify(self);
+//         @strongify(self);
          MSLog(@"李磊---login---%@",x);
          TableViewController *vc = [[TableViewController alloc]init];
          [self.navigationController pushViewController:vc animated:YES];

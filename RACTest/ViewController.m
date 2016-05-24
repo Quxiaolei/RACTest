@@ -109,7 +109,12 @@ UITableViewDataSource>
         [subscriber sendNext:@1];
         MSLog(@"李磊---send1");
         [subscriber sendCompleted];
-        return  nil;
+        
+        //RACDisposable
+        //创建并返回RACDisposable对象来清理已经被销毁的信号
+        return  [RACDisposable disposableWithBlock:^{
+            MSLog(@"李磊---error");
+        }];
     }];
     
     RACSignal *signalB = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {

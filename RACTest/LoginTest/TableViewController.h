@@ -11,3 +11,7 @@
 @interface TableViewController : UITableViewController
 
 @end
+
+
+//skip,跳过第一个
+//尽量是一个signal管道处理一个操作,尽量解耦,以便扩展
