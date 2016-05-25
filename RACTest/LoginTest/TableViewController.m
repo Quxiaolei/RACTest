@@ -26,6 +26,7 @@
     self.navigationItem.title = @"tableView";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"获取数据" style:UIBarButtonItemStylePlain target:nil action:nil];
     @weakify(self);
+/*-------------------------RACCommand----------通常用来表示某个Action的执行--------------------------------*/
     self.navigationItem.rightBarButtonItem.rac_command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(UIBarButtonItem *input) {
         MSLog(@"李磊---------%@",input);
         RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {

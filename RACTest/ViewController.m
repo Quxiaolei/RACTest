@@ -33,7 +33,9 @@ UITableViewDataSource>
                        @"reduce:多个signal合为元组，元组中任意一个值发生变化就会sendNext",
                        @"filter:过滤signal，使用它可以获取满足条件的signal",
                        @"ignoreSignal:忽略signal的某些值",
-                       @"distinctUntilChanged:本次的值有明显的变化就会发出信号，否则会被忽略掉"];
+                       @"distinctUntilChanged:本次的值有明显的变化就会发出信号，否则会被忽略掉",
+                       @"defer:不订阅无操作,一订阅就操作.每次取signal的最新值",
+                       @"flattenMap:将signal中的signal的值剥离出来"];
     
     [self createView];
 }
@@ -81,6 +83,8 @@ UITableViewDataSource>
         case 6: [self filterSignal]; break;
         case 7: [self ignoreSignal]; break;
         case 8: [self distinctUntilChangedSignal]; break;
+        case 9: [self deferSignal]; break;
+        case 10:[self flattenMapSignal]; break;
 
         default:break;
     }
@@ -113,6 +117,7 @@ UITableViewDataSource>
         //RACDisposable
         //创建并返回RACDisposable对象来清理已经被销毁的信号
         return  [RACDisposable disposableWithBlock:^{
+            //常用来做一些置空或者释放对象的操作
             MSLog(@"李磊---error");
         }];
     }];
@@ -379,7 +384,56 @@ UITableViewDataSource>
     }];
 }
 
+/*!
+ *  @author madis, 16-05-25 15:05:47
+ *
+ *  defer:类方法,返回一个延迟的signal直到被订阅.可以把一个热信号转换成冷信号(signal就是不订阅就没其他操作,一旦订阅就开始进行block里面的操作)
+ */
+//每次取订阅时时signal的最新值
+//当一个按钮被点击多次时,但是只需要最后一次点击事件,获取最后一次点击的signal
+- (void)deferSignal
+{
+    //RACSubject:主要用于手动封装自定义signal,是连接非RAC代码和signal的桥梁.类比NSMutableArray与NSArray
+    RACSubject *subject_buttonSendMessageClicked = [RACSubject new];
+    RACSignal *signal_sendMessageRequest = [RACSignal new];
+    RACSignal *signal_defer = [RACSignal defer:^RACSignal *{
+        return [RACSignal concat:@[[subject_buttonSendMessageClicked take:1],
+                                   //每次只取btnSignal的第一个(RACStream)
+                                   [signal_sendMessageRequest catch:^RACSignal *(NSError *error) {
+            //网络请求错误处理,返回一个空的signal(signal很快就会完成,sendCompleted)
+            return [RACSignal empty];
+        }]]];
+    }];
+}
+/*!
+ *  @author madis, 16-05-25 23:05:27
+ *
+ *  flattenMap:根据前一个信号传递进来的参数重新建立了一个信号
+ */
+//将signal中的signal的值剥离出来([[A]]---->[A]),类比数组的数组中的元素
+//flattenMap方法通过调用block（value）来创建一个新的方法。它可以灵活的定义新创建的信号。而map方法，将会创建一个和原来一模一样的信号，只不过新的信号传递的值变为了block（value）
 
+//map:创建了一个新的信号,并且变换了信号的输出值,具有明显的先后顺序关系
+//flattenMap:直接生成了一个新的信号，这两个信号并没有先后顺序关系，属于同层次的平行关系
+//map 与 swtichToLatest结合类似于flattenMap
+//switchToLatest：选择最新的信号的Block(value)，比如我依次发送3个signal，但是switchToLatest只取第三个实现。
+- (void)flattenMapSignal
+{
+    RACSubject *subject_A = [RACSubject new];
+    RACSubject *subject_B = [RACSubject new];
+    RACSubject *subject_C = [RACSubject new];
+
+    [[RACSignal zip:@[subject_A,
+                      subject_B,
+                      subject_C]]
+     flattenMap:^RACStream *(RACTuple* value){
+         //RACTupleUnpack:遍历RACTuple,取得与之对应的值
+         RACTupleUnpack(NSString *message,NSNumber *uid, NSString *content) = value;
+         return [RACSignal new];
+//         [self.viewModel signal_sendMessageRequest:message userid:uid content:content];
+     }];
+
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

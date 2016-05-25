@@ -254,6 +254,30 @@ typedef NS_ENUM(NSInteger, LoginStatus) {
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
+
+//!!!: signal铺设
+- (void)prepareSignal{
+    
+    NSObject*viewModel;
+    RACSignal*networkRequest;
+    RACSubject*subjectLoginEnabled;
+//    [RACSignal combineLatest:<#(id<NSFastEnumeration>)#>];
+    
+    
+    //1. 点击登录开始网络请求
+    RACSignal*signalButtonLoginClicked = [[self.loginBtn rac_command] executing];
+    [[RACSignal concat:@[[signalButtonLoginClicked take:1],networkRequest]]
+     subscribeNext:^(id x) {
+         //viewModel.做操作
+     } error:^(NSError *error) {
+         //[viewMode.signalStatus sendError:error];
+     } completed:^{
+         //[viewMode.signalStatus sendCompleted];
+     }];
+    
+    // Login
+//    subject subscribeNext:<#^(id x)nextBlock#> error:<#^(NSError *error)errorBlock#> completed:<#^(void)completedBlock#>
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
