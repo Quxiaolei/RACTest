@@ -25,7 +25,8 @@ UITableViewDataSource>
     // Do any additional setup after loading the view, typically from a nib.
     
     _input = @111111111;
-    _cellNameArray = @[@"concat:顺序拼接signal",
+    _cellNameArray = @[@"test",
+                       @"concat:顺序拼接signal",
                        @"zipWith:把两个signal的内容合并成一个signal",
                        @"then:第一个signal完成，连接then返回的信号,覆盖第一个sendNext",
                        @"merge:多个signal合并为一个signal，任何一个signal有新值的时候就会调用",
@@ -74,22 +75,51 @@ UITableViewDataSource>
 {
     
     switch (indexPath.row) {
-        case 0: [self concatSignal]; break;
-        case 1: [self zipWithSignal]; break;
-        case 2: [self thenSignal]; break;
-        case 3: [self mergeSignal]; break;
-        case 4: [self combineLatestSignal]; break;
-        case 5: [self reduceSignal]; break;
-        case 6: [self filterSignal]; break;
-        case 7: [self ignoreSignal]; break;
-        case 8: [self distinctUntilChangedSignal]; break;
-        case 9: [self deferSignal]; break;
-        case 10:[self flattenMapSignal]; break;
+        case 0: [self test]; break;
+        case 1: [self concatSignal]; break;
+        case 2: [self zipWithSignal]; break;
+        case 3: [self thenSignal]; break;
+        case 4: [self mergeSignal]; break;
+        case 5: [self combineLatestSignal]; break;
+        case 6: [self reduceSignal]; break;
+        case 7: [self filterSignal]; break;
+        case 8: [self ignoreSignal]; break;
+        case 9: [self distinctUntilChangedSignal]; break;
+        case 10: [self deferSignal]; break;
+        case 11:[self flattenMapSignal]; break;
 
         default:break;
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+- (void)test
+{
+    //map+switchToLatest
+    //switchToLatest:自动切换signal of signals到最后一个
+    //当用户在搜索框输入文字时，需要通过网络请求返回相应的hints，每当文字有变动时，需要取消上一次的请求
+//    __block NSArray *pins = @[@172230988, @172230947, @172230899, @172230777, @172230707];
+//    __block NSInteger index = 0;
+//    
+//    RACSignal *signal = [[[[RACSignal interval:0.1 onScheduler:[RACScheduler scheduler]]
+//                           take:pins.count]
+//                          map:^id(id value) {
+//                              RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+//                                  [subscriber sendNext:pins[index++]];
+////                                  [subscriber sendCompleted];
+//                                  return nil;
+//                              }];
+//                              return [signal doNext:^(id x) {
+//                                  NSLog(@"这里只会执行一次");
+//                              }];
+//                          }]
+//                         switchToLatest];
+//    
+//    [signal subscribeNext:^(NSNumber *pin) {
+//        NSLog(@"pinID:%@", pin);
+//    } completed:^{
+//        NSLog(@"completed"); 
+//    }];
 }
 #pragma mark - RAC
 /*!
@@ -98,7 +128,7 @@ UITableViewDataSource>
  *  concat:按一定顺序拼接信号，当多个信号发出的时候，有顺序的接收信号。
  */
 
-// 把signalA拼接到signalB后，signalA发送完成，signalB才会被激活。
+// 把signalA拼接到signalB后，signalA发送completed，signalB才会被激活。
 // concat底层实现:
 // 1.当拼接信号被订阅，就会调用拼接信号的didSubscribe
 // 2.didSubscribe中，会先订阅第一个源信号（signalA）
@@ -141,7 +171,7 @@ UITableViewDataSource>
 /*!
  *  @author madis, 16-05-11 11:05:39
  *
- *  zipWith(类似NSArray):把两个信号压缩成一个信号，只有当两个信号同时发出信号内容时，并且把两个信号的内容合并成一个信号，才会触发压缩流的next事件。
+ *  zipWith(类似NSArray,zip---->成为signal的signal):把两个信号压缩成一个信号，只有当两个信号同时发出信号内容时，并且把两个信号的内容合并成一个信号，才会触发压缩流的next事件。
  */
 // 底层实现:
 // 1.定义压缩信号，内部就会自动订阅signalA，signalB
@@ -433,6 +463,21 @@ UITableViewDataSource>
 //         [self.viewModel signal_sendMessageRequest:message userid:uid content:content];
      }];
 
+}
+/*!
+ *  @author madis, 16-05-28 23:05:50
+ *
+ *  takeUntil:当前一个signal,send Next或者send Completed时,才执行
+ */
+- (void)takeUntilSignal
+{
+    //避免每次Cell被重用时，该button都会被addTarget:selector。
+//    [[[cell.detailButton
+//       rac_signalForControlEvents:UIControlEventTouchUpInside]
+//      takeUntil:cell.rac_prepareForReuseSignal]
+//     subscribeNext:^(id x) {
+//         // generate and push ViewController
+//     }];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

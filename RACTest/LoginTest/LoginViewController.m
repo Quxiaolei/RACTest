@@ -16,6 +16,9 @@ typedef NS_ENUM(NSInteger, LoginStatus) {
 };
 
 @interface LoginViewController ()
+<
+UIGestureRecognizerDelegate
+>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextField *accountTextField;
@@ -35,6 +38,12 @@ typedef NS_ENUM(NSInteger, LoginStatus) {
     
     self.navigationItem.title = @"首页";
     _loginStatus = LoginStatusUnLogin;
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgViewDoubleClick:)];
+    tapGesture.numberOfTapsRequired = 2;
+    [self.imageView addGestureRecognizer:tapGesture];
+    
+//    self.imageView addObserver:<#(nonnull NSObject *)#> forKeyPath:<#(nonnull NSString *)#> options:<#(NSKeyValueObservingOptions)#> context:<#(nullable void *)#>
 /*----------------------------------------------------------------------------*/
     //一直订阅信号,每次都做判断,不必要进行
 //    [_accountTextField.rac_textSignal subscribeNext:^(id x) {
@@ -250,6 +259,18 @@ typedef NS_ENUM(NSInteger, LoginStatus) {
 //    MSLog(@"李磊---传统点击事件");
 //}
 
+- (void)imgViewDoubleClick:(UIGestureRecognizer *)sender
+{
+    MSLog(@"李磊");
+//    某个App要通过Twitter登录，同时允许取消登录，就可以这么做 (source)
+//    _twitterLoginCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+//        @strongify(self);
+//        return [[self
+//                 twitterSignInSignal]
+//                takeUntil:self.cancelCommand.executionSignals];
+//    }];
+//    RAC(self.authenticatedUser) = [self.twitterLoginCommand.executionSignals switchToLatest];
+}
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
