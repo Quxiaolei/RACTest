@@ -41,6 +41,8 @@ UIGestureRecognizerDelegate
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgViewDoubleClick:)];
     tapGesture.numberOfTapsRequired = 2;
+    //???: 为什么xib中设置过了,但是还是不好使呢?
+    self.imageView.userInteractionEnabled = YES;
     [self.imageView addGestureRecognizer:tapGesture];
     
 //    self.imageView addObserver:<#(nonnull NSObject *)#> forKeyPath:<#(nonnull NSString *)#> options:<#(NSKeyValueObservingOptions)#> context:<#(nullable void *)#>

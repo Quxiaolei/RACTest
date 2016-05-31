@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		252474131CFDDCAF004AFD6E /* TableViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 252474121CFDDCAF004AFD6E /* TableViewModel.m */; };
 		259A21F21CE2CDEB00288C7A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A21F11CE2CDEB00288C7A /* main.m */; };
 		259A21F51CE2CDEB00288C7A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A21F41CE2CDEB00288C7A /* AppDelegate.m */; };
 		259A21F81CE2CDEB00288C7A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A21F71CE2CDEB00288C7A /* ViewController.m */; };
@@ -27,6 +28,8 @@
 
 /* Begin PBXFileReference section */
 		04CC62E53153CC48F0007EA3 /* Pods_RACTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RACTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		252474111CFDDCAF004AFD6E /* TableViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TableViewModel.h; path = LoginTest/TableViewModel.h; sourceTree = "<group>"; };
+		252474121CFDDCAF004AFD6E /* TableViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TableViewModel.m; path = LoginTest/TableViewModel.m; sourceTree = "<group>"; };
 		259A21ED1CE2CDEB00288C7A /* RACTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RACTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		259A21F11CE2CDEB00288C7A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		259A21F31CE2CDEB00288C7A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -131,6 +134,8 @@
 				25F97A3D1CEAFF7000142F56 /* LoginViewController.xib */,
 				25F97A411CEB1FB000142F56 /* TableViewController.h */,
 				25F97A421CEB1FB000142F56 /* TableViewController.m */,
+				252474111CFDDCAF004AFD6E /* TableViewModel.h */,
+				252474121CFDDCAF004AFD6E /* TableViewModel.m */,
 			);
 			name = LoginTest;
 			sourceTree = "<group>";
@@ -352,6 +357,7 @@
 				259A21F81CE2CDEB00288C7A /* ViewController.m in Sources */,
 				259A21F51CE2CDEB00288C7A /* AppDelegate.m in Sources */,
 				259A21F21CE2CDEB00288C7A /* main.m in Sources */,
+				252474131CFDDCAF004AFD6E /* TableViewModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
