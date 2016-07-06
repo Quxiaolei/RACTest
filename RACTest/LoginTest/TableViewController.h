@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TableViewModel.h"
+
+@interface TableViewControllerCell : UITableViewCell
+@property (nonatomic,strong) UserModel *model;
+//- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier mode:(UserModel *)model;
+@end
 
 @interface TableViewController : UITableViewController
 

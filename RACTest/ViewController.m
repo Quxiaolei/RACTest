@@ -156,7 +156,9 @@ UITableViewDataSource>
         [subscriber sendNext:@2];
         MSLog(@"李磊---send2");
         [subscriber sendCompleted];
-        return nil;
+        return [RACDisposable disposableWithBlock:^{
+            //取消操作
+        }];
     }];
     
     [[signalA concat:signalB] subscribeNext:^(id x) {

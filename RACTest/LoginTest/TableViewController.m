@@ -7,17 +7,58 @@
 //
 
 #import "TableViewController.h"
+#import "TableViewModel.h"
 
+@implementation TableViewControllerCell
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+//        self.model = [UserModel new];
+        [self initSignal];
+    }
+    return self;
+}
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+//        self.model = [UserModel new];
+        [self initSignal];
+    }
+    return self;
+}
+- (void)initSignal
+{
+    RAC(self,textLabel.text) = RACObserve(self, model.name);
+    RAC(self,textLabel.text) = RACObserve(self, model.introduction);
+    RAC(self,textLabel.text) = RACObserve(self, model.name);
+//    self.textLabel.text
+//    self.detailTextLabel.text
+}
+@end
+
+static NSString *const cellIdentifier = @"TableViewCell";
 @interface TableViewController ()
 @property (nonatomic,strong) NSArray<NSString *> *cellNameArray;
-
+@property (nonatomic,strong) TableViewModel *viewModel;
 @end
 
 @implementation TableViewController
 
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        self.viewModel = [[TableViewModel alloc] init];
+        [self.viewModel loadUsers];
+        MSLog(@"李磊");
+    }
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self.viewModel loadUsers];
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 
@@ -38,6 +79,8 @@
         [self getDataSource];
         return signal;
     }];
+    
+    [self.tableView registerClass:[TableViewControllerCell class] forCellReuseIdentifier:cellIdentifier];
 }
 
 
@@ -71,22 +114,30 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return self.viewModel.allDataArray.count;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    TableViewControllerCell *cell = (TableViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[TableViewControllerCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+    }
+    cell.model = [[UserModel alloc] initWithName:self.viewModel.allDataArray[indexPath.row].name];
+//    self.viewModel.allDataArray[indexPath.row];
+
     
+//    RAC(cell,textLabel.text) = [self.];
+//    cell.textLabel.text = @"1";
+//    cell.detailTextLabel.text = @"2";
     // Configure the cell...
     
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.

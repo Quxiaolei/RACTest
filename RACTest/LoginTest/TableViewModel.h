@@ -19,6 +19,7 @@ typedef  NS_ENUM(NSInteger, UserSex) {
 @property (nonatomic,assign) NSInteger uid;
 @property (nonatomic,copy  ) NSString  *introduction;
 @property (nonatomic,assign) UserSex   sex;
+-(instancetype)initWithName:(NSString*)name;
 @end
 @interface TableViewModel : NSObject
 @property (nonatomic, strong) NSMutableArray <UserModel *>*allDataArray;

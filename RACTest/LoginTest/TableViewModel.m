@@ -10,17 +10,26 @@
 
 @implementation UserModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
 -(instancetype)initWithName:(NSString*)name
 {
     self = [super init];
     if (self) {
         self.name = name;
         self.uid = arc4random()% 9;
-        self.introduction = [NSString stringWithFormat:@"这就是%@的简介-%@",name,arc4random()% 9];
+        self.introduction = [NSString stringWithFormat:@"这就是%@的简介-%u",name,arc4random()% 9];
         self.sex = arc4random()% 3;
     }
     return self;
 }
+@end
 @implementation TableViewModel
 
 - (id)init
@@ -49,10 +58,10 @@
                                  observer:self]
      subscribeNext:^(id x) {
          RACTupleUnpack(id sub, NSDictionary *changeDict) = x;
-         NSInteger kind = [[change valueForKey:NSKeyValueChangeKindKey] integerValue];
-         id oldValue    = [change valueForKey:NSKeyValueChangeOldKey];
-         id newValue    = [change valueForKey:NSKeyValueChangeNewKey];
-         id index       = [change valueForKey:NSKeyValueChangeIndexesKey];
+         NSInteger kind = [[changeDict valueForKey:NSKeyValueChangeKindKey] integerValue];
+         id oldValue    = [changeDict valueForKey:NSKeyValueChangeOldKey];
+         id newValue    = [changeDict valueForKey:NSKeyValueChangeNewKey];
+         id index       = [changeDict valueForKey:NSKeyValueChangeIndexesKey];
          switch (kind) {
              case NSKeyValueChangeSetting: [subject_setting sendNext:newValue]; break;
              case NSKeyValueChangeInsertion: [subject_insertion sendNext:newValue]; break;
@@ -76,6 +85,7 @@
     }];
     //数组插入对象
     [subject_insertion subscribeNext:^(NSArray *x) {
+        @strongify(self);
         UserModel *user = [x firstObject];
         if (UserSex_male == user.sex){
             [[self mutableArrayValueForKey:@"topDataArray"] addObject:user];
@@ -88,24 +98,29 @@
         @strongify(self);
         UserModel *user = [x firstObject];
         if (UserSex_male == user.sex){
-            [[self mutableArrayValueForKey:@"topDataArray"] removeObject:conversation];
+            [[self mutableArrayValueForKey:@"topDataArray"] removeObject:user];
         }else if (UserSex_female == user.sex){
-            [[self mutableArrayValueForKey:@"normalDataArray"] removeObject:conversation];
+            [[self mutableArrayValueForKey:@"normalDataArray"] removeObject:user];
         }
     }];
     //数组替换对象
     [subject_replacement subscribeNext:^(RACTuple *x) {
         @strongify(self);
         RACTupleUnpack(NSArray *user_oldArray, NSArray *user_newArray) = x;
-        UserModel *user = [user_oldArray firstObject];
-        UserModel *user = [user_newArray firstObject];
+        UserModel *user_old = [user_oldArray firstObject];
+        UserModel *user_new = [user_newArray firstObject];
+        //!!!: 待完善
     }];
 }
 - (void)loadUsers
 {
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:0];
     for(int i= 0;i<20;i++){
         UserModel *user = [[UserModel alloc] initWithName:[NSString stringWithFormat:@"张三-%d号",i]];
-        [self.allDataArray addObject:user];
+        //!!!:插入方法呢?
+//        [self.allDataArray addObject:user];
+        [mutableArray addObject:user];
     }
+    self.allDataArray = mutableArray;
 }
 @end

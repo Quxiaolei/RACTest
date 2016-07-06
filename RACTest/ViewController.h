@@ -39,19 +39,45 @@
 //    // do share logic
 //}];
 
+#pragma mark - RACSubject
+//RACSubject:手动创建的类似于RACSignal的signal,可以有send next,error,completed
+//RACSubject *subject_newSubject = [RACSubject subject];
+
 #pragma mark - RACTuple
 //RACTuple:signal数组,存在first,last,second等方法
+
 #pragma mark - RACSignal
-//error:整个通道都出现问题,不能订阅
-//[RACSignal empty]:signal很快就会完成,sendCompleted
+//error:整个通道都出现问题,不能订阅,用catch捕获到error signal(一般为了使通道可用,在catch的block中返回[RACSignal empty])
+//[RACSignal empty]:signal很快就会完成,sendCompleted,一般用于catch操作中,确保通道不断
 //[RACSignal repeat]:signal完成后,重新subscribe
 //[RACSignal doNext]:在某个signal到来的时候做某个操作,跟signal无关
+
+//timeout:onScheduler:网络超时,在等待了某个interval后仍没有返回,发送error
+//delay:在延迟了某个interval后执行sendNext和sendCompleted操作
 
 #pragma mark - RACStream
 //[RACStream take:1]:取出该stream中的第一个值加上completed,作为一个signal
 //[RACStream skip:1]:扔掉该stream中的第一个值将剩余的值加一个completed,作为一个signal
 
+//FIXME: flatten和flattenMap的区别
+//flatten:返回streams中的stream(Merge)
+//flattenMap:在block回调中需要一个RACStream的返回值(SelectMany),多用于网络请求和回调的处理.
+//           多个flattenMap连续使用通常用于做连续的操作,如果需要从上一级传递参数,试试map
 
 
+#pragma mark - RACDisposable
+
+//[RACDisposable disposableWithBlock:^{}];  一般在block中做些取消操作
+//dispose:直接signal的订阅
+
+#pragma mark - 线程操作符
+//doNext/doError(类比catch)/doCompleted/finally(不论error还是completed都会调用)
+//delay:在send next和completed之前延迟()s
+//repeat:signal完成后再重复订阅
+
+
+
+
+//网络请求后的操作和UI的操作,一般要在主线程上[ deliverOnMainThread]
 
 

@@ -221,6 +221,7 @@ UIGestureRecognizerDelegate
  */
 - (RACSignal *)loadImageOnBackGround
 {
+    //后台线程
     RACScheduler *scheduler = [RACScheduler schedulerWithPriority:RACSchedulerPriorityBackground];
     NSError *error = [NSError errorWithDomain:@"loadImageOnBackGround" code:404 userInfo:nil];
     return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
@@ -233,7 +234,10 @@ UIGestureRecognizerDelegate
         [subscriber sendCompleted];
         return nil;
         //后台执行
-    }] subscribeOn:scheduler];
+    }] deliverOn:scheduler];
+//            deliverOnMainThread];
+    //后台订阅
+//            subscribeOn:scheduler];
 }
 - (IBAction)regBtnClick:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"注册测试" message:@"取消/确定?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定",nil];
