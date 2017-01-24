@@ -150,22 +150,40 @@ UIGestureRecognizerDelegate
 //        });
 //    }];
 //------------------
-    [[[[[_loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] doNext:^(id x) {
-        _loginBtn.enabled = NO;
-        //防止连点
-    }] throttle:0.5f]
-      //在主线程中执行
-      deliverOn:[RACScheduler mainThreadScheduler]]
-     subscribeNext:^(id x) {
-//         @strongify(self);
-         MSLog(@"李磊---login---%@",x);
-         TableViewController *vc = [[TableViewController alloc]init];
-         [self.navigationController pushViewController:vc animated:YES];
-         //模拟登陆成功
-         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-             _loginBtn.enabled = YES;
-         });
-     }];
+//    [[[[[_loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] doNext:^(id x) {
+//        _loginBtn.enabled = NO;
+//        //防止连点
+//    }] throttle:0.5f]
+//      //在主线程中执行
+//      deliverOn:[RACScheduler mainThreadScheduler]]
+//     subscribeNext:^(id x) {
+////         @strongify(self);
+//         MSLog(@"李磊---login---%@",x);
+//         TableViewController *vc = [[TableViewController alloc]init];
+//         [self.navigationController pushViewController:vc animated:YES];
+//         //模拟登陆成功
+//         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//             _loginBtn.enabled = YES;
+//         });
+//     }];
+    
+    
+//------------------
+    //当点击regBtn时就会走signal的next操作
+    RACSignal *regBtnSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        MSLog(@"李磊---regBtnClicked Signal");
+        [subscriber sendNext:@1];
+        [subscriber sendCompleted];
+        return nil;
+    }];
+    self.regBtn.rac_command = [[RACCommand alloc] initWithEnabled:regBtnSignal signalBlock:^RACSignal *(id input) {
+        MSLog(@"李磊----regBtnClicked");
+        return [RACSignal empty];
+    }];
+//    [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+//        MSLog(@"李磊");
+//        return [RACSignal empty];
+//    }];
     
 /*-------------------------------------通知----------------------------------------*/
     //!!!:  通知
